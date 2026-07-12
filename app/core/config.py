@@ -7,17 +7,17 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Application settings."""
 
-    APP_NAME: str = "News Crawler"
+    APP_NAME: str = Field(default="News Crawler")
 
-    APP_VERSION: str = "1.0.0"
+    APP_VERSION: str = Field(default="1.0.0")
 
-    DEBUG: bool = True
+    DEBUG: bool = Field(default=True)
+
+    CRAWLER_INTERVAL: int = Field(default=300)
 
     DATABASE_URL: str = Field(...)
 
     RSS_URL: str = Field(...)
-
-    CRAWLER_INTERVAL: int = 300
 
     model_config = SettingsConfigDict(
         env_file=".env",
