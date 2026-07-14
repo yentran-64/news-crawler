@@ -1,34 +1,18 @@
-from functools import lru_cache
-
-from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application settings."""
+    app_name: str
+    app_version: str
+    debug: bool
 
-    APP_NAME: str = Field(default="News Crawler")
-
-    APP_VERSION: str = Field(default="1.0.0")
-
-    DEBUG: bool = Field(default=True)
-
-    CRAWLER_INTERVAL: int = Field(default=300)
-
-    DATABASE_URL: str = Field(...)
-
-    RSS_URL: str = Field(...)
+    database_url: str
 
     model_config = SettingsConfigDict(
         env_file=".env",
-        case_sensitive=True,
+        env_file_encoding="utf-8",
         extra="ignore",
     )
 
 
-@lru_cache
-def get_settings() -> Settings:
-    return Settings()
-
-
-settings = get_settings()
+settings = Settings()
