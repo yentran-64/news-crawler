@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from sqlmodel import SQLModel
 
+from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.database import engine
 
@@ -19,7 +20,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.include_router(api_router)
+
 
 @app.get("/")
 def root():
-    return {"message": "News Crawler API"}
+    return {
+        "message": "News Crawler API",
+    }
