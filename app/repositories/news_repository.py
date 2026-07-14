@@ -23,8 +23,29 @@ class NewsRepository:
         statement = select(News).where(News.link == link)
         return self.session.exec(statement).first()
 
-    def count(self) -> int:
+    def count(
+    self,
+    title: str | None = None,
+    from_date: datetime | None = None,
+    to_date: datetime | None = None,
+    ):
         statement = select(func.count()).select_from(News)
+
+        if title:
+            statement = statement.where(
+                News.title.ilike(f"%{title}%")
+            )
+
+        if from_date:
+            statement = statement.where(
+                News.pub_date >= from_date
+            )
+
+        if to_date:
+            statement = statement.where(
+                News.pub_date <= to_date
+            )
+
         return self.session.exec(statement).one()
 
     def get_all(
@@ -52,9 +73,12 @@ class NewsRepository:
                 News.pub_date <= to_date
             )
 
-        statement = statement.offset(
-            (page - 1) * size
-        ).limit(size)
+        statement = (
+            statement
+            .order_by(News.pub_date.desc())
+            .offset((page - 1) * size)
+            .limit(size)
+        )
 
         return self.session.exec(statement).all()
 
